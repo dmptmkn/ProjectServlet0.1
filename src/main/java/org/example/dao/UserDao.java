@@ -6,10 +6,10 @@ import java.util.List;
 
 public interface UserDao {
 
-    void save(User user);
-    User findById(Long id);
+    boolean save(User user);
     List<User> findAll();
-    void update(User user);
-    void delete(Long id);
+    User findById(Long id);
+    boolean update(Long id, User user);
+    boolean delete(Long id);
 
 }
