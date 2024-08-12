@@ -18,8 +18,8 @@ public class UserDaoImpl implements UserDao {
     private static final UserDaoImpl INSTANCE = new UserDaoImpl();
 
     private static final String SAVE_QUERY = """
-            INSERT INTO user (name, last_name, age)
-            VALUES (?, ?, ?)
+            INSERT INTO user (name, last_name, age, login, password)
+            VALUES (?, ?, ?, ?, ?)
             """;
     private static final String FIND_ALL_QUERY = """
             SELECT * FROM user
@@ -31,7 +31,9 @@ public class UserDaoImpl implements UserDao {
             UPDATE user
             SET name      = ?,
                 last_name = ?,
-                age       = ?
+                age       = ?,
+                login     = ?,
+                password  = ?
             WHERE id = ?
             """;
     private static final String DELETE_QUERY = """
@@ -52,6 +54,8 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setInt(3, user.getAge());
+            preparedStatement.setString(4, user.getLogin());
+            preparedStatement.setString(5, user.getPassword());
 
             int rowCount = preparedStatement.executeUpdate();
             return rowCount != 0;
@@ -101,6 +105,8 @@ public class UserDaoImpl implements UserDao {
             preparedStatement.setString(1, user.getName());
             preparedStatement.setString(2, user.getLastName());
             preparedStatement.setInt(3, user.getAge());
+            preparedStatement.setString(4, user.getLogin());
+            preparedStatement.setString(5, user.getPassword());
             preparedStatement.setLong(4, id);
 
             int rowCount = preparedStatement.executeUpdate();
@@ -127,6 +133,8 @@ public class UserDaoImpl implements UserDao {
                 .name(resultSet.getString("name"))
                 .lastName(resultSet.getString("last_name"))
                 .age(resultSet.getInt("age"))
+                .login(resultSet.getString("login"))
+                .password(resultSet.getString("password"))
                 .build();
     }
 }
