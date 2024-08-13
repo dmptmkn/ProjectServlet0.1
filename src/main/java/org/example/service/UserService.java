@@ -1,15 +1,11 @@
 package org.example.service;
 
-import org.example.entity.User;
-
-import java.util.List;
+import org.example.dto.CreateUserDto;
+import org.example.dto.UserDto;
 
 public interface UserService {
 
-    boolean save(User user);
-    List<User> findAll();
-    User findById(Long id);
-    boolean update(Long id, User user);
-    boolean delete(Long id);
+    boolean create(CreateUserDto newUser);
+    UserDto login(String login, String password);
 
 }
