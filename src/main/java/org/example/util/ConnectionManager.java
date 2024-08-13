@@ -1,13 +1,12 @@
 package org.example.util;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.experimental.UtilityClass;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@UtilityClass
 public class ConnectionManager {
 
     private static final String URL = "jdbc:mysql://localhost:3306/test";
