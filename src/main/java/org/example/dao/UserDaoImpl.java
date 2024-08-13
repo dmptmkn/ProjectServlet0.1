@@ -41,6 +41,10 @@ public class UserDaoImpl implements UserDao {
             FROM user
             WHERE id = ?
             """;
+    private static final String FIND_BY_LOGIN_AND_PASSWORD_QUERY = FIND_ALL_QUERY + """
+            WHERE login = ?
+              AND password = ?
+            """;
 
     public static UserDaoImpl getInstance() {
         return INSTANCE;
@@ -79,7 +83,6 @@ public class UserDaoImpl implements UserDao {
         return users;
     }
 
-
     @Override
     @SneakyThrows
     public User findById(Long id) {
@@ -89,6 +92,24 @@ public class UserDaoImpl implements UserDao {
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_QUERY);
              ResultSet resultSet = preparedStatement.getResultSet()) {
             preparedStatement.setLong(1, id);
+            if (resultSet.next()) {
+                user = buildUser(resultSet);
+            }
+        }
+
+        return user;
+    }
+
+    @Override
+    @SneakyThrows
+    public User findByLoginAndPassword(String login, String password) {
+        User user = null;
+
+        try (Connection connection = ConnectionManager.getConnection();
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_LOGIN_AND_PASSWORD_QUERY);
+             ResultSet resultSet = preparedStatement.getResultSet()) {
+            preparedStatement.setString(1, login);
+            preparedStatement.setString(2, password);
             if (resultSet.next()) {
                 user = buildUser(resultSet);
             }
