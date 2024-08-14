@@ -27,6 +27,11 @@ public class UserDaoImpl implements UserDao {
     private static final String FIND_BY_ID_QUERY = FIND_ALL_QUERY + """
             WHERE id = ?
             """;
+    private static final String FIND_BY_LOGIN_AND_PASSWORD_QUERY = FIND_ALL_QUERY + """
+            WHERE login = ?
+              AND password = ?
+            """;
+
     private static final String UPDATE_QUERY = """
             UPDATE user
             SET name      = ?,
@@ -41,11 +46,6 @@ public class UserDaoImpl implements UserDao {
             FROM user
             WHERE id = ?
             """;
-    private static final String FIND_BY_LOGIN_AND_PASSWORD_QUERY = FIND_ALL_QUERY + """
-            WHERE login = ?
-              AND password = ?
-            """;
-
     public static UserDaoImpl getInstance() {
         return INSTANCE;
     }
@@ -73,7 +73,7 @@ public class UserDaoImpl implements UserDao {
 
         try (Connection connection = ConnectionManager.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(FIND_ALL_QUERY);
-             ResultSet resultSet = preparedStatement.getResultSet()) {
+             ResultSet resultSet = preparedStatement.executeQuery()) {
             while (resultSet.next()) {
                 User user = buildUser(resultSet);
                 users.add(user);
@@ -89,9 +89,9 @@ public class UserDaoImpl implements UserDao {
         User user = null;
 
         try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_QUERY);
-             ResultSet resultSet = preparedStatement.getResultSet()) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_ID_QUERY)) {
             preparedStatement.setLong(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user = buildUser(resultSet);
             }
@@ -106,10 +106,10 @@ public class UserDaoImpl implements UserDao {
         User user = null;
 
         try (Connection connection = ConnectionManager.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_LOGIN_AND_PASSWORD_QUERY);
-             ResultSet resultSet = preparedStatement.getResultSet()) {
+             PreparedStatement preparedStatement = connection.prepareStatement(FIND_BY_LOGIN_AND_PASSWORD_QUERY)) {
             preparedStatement.setString(1, login);
             preparedStatement.setString(2, password);
+            ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 user = buildUser(resultSet);
             }

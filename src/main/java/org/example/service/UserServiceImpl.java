@@ -34,12 +34,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto login(String login, String password) {
         User user = dao.findByLoginAndPassword(login, password);
-        UserDto userDto = UserDto.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .lastName(user.getLastName())
-                .age(String.valueOf(user.getAge()))
-                .build();
+
+        UserDto userDto = null;
+        if (user != null) {
+            userDto = UserDto.builder()
+                    .id(user.getId())
+                    .name(user.getName())
+                    .lastName(user.getLastName())
+                    .age(String.valueOf(user.getAge()))
+                    .build();
+        }
 
         return userDto;
     }
